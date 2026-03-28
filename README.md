@@ -2,7 +2,7 @@
 
 **Paper:** *Pseudo-Labeling for Unsupervised Domain Adaptation with Kernel GLMs* (ICML 2026 Submission)
 
-This anonymous repository contains the code and reproducible scripts for the additional experiments conducted during the author rebuttal phase. These experiments empirically validate the theoretical claims made in the manuscript and address specific reviewer questions regarding baselines and hyperparameter behavior under covariate shift.
+This anonymous repository contains the code and reproducible scripts for the original and additional experiments conducted during the author rebuttal phase. These experiments empirically validate the theoretical claims made in the manuscript and address specific reviewer questions regarding baselines and hyperparameter behavior under covariate shift.
 
 ## Repository Structure
 
@@ -15,7 +15,7 @@ The repository is organized around three primary rebuttal experiments:
   * KRR Pseudo-Labeling (Wang, 2023)
   * Importance-Weighted Cross-Validation via KLIEP (KLIEP-IW)
   * Importance-Weighted Cross-Validation via Kernel Mean Matching (KMM-IW)
-* **Description:** This script runs the strict "split-and-fit" cross-validation pipeline across 100 random seeds on the Raisin dataset. It tracks the candidate selection process via log-loss (cross-entropy) and demonstrates the instability of density-ratio methods as well as the calibration failure of unconstrained squared-loss selection (KRR).
+* **Description:** This script runs the strict "split-and-fit" cross-validation pipeline across 100 random seeds on the Raisin dataset, as described in Section 6.2 of the paper. It tracks the candidate selection process via log-loss (cross-entropy) and demonstrates the instability of density-ratio methods as well as the calibration failure of unconstrained squared-loss selection (KRR).
 
 | Method Category | Selection Strategy / Model | Target Risk (Mean) | Standard Error (SE) |
 | :--- | :--- | :--- | :--- |
@@ -69,17 +69,18 @@ For full reproducible details—including the exact grid of hyperparameters and 
 | **Oracle** | 0.002855 | [0.001312, 0.004399] |
 
 
-
-
-### Real-World Data (Section 6.2)
-We evaluate our method on the Raisin dataset. 
-* **Run the experiment:** The notebook `final_exp_raisin.ipynb` contains everything needed to reproduce the results presented in the paper.
-
-
 ### 3. `demo_covariate_shift.ipynb` part II
 **Objective:** Ablation study on the imputation model penalty (`lbd_tilde`) to validate our theoretical insight.
 * **Description:** Our theoretical analysis dictates that the imputation model must be undersmoothed to ensure valid model selection. This script sweeps over a grid of `lbd_tilde` values during the pseudo-label generation phase. 
 * **Results:** The output empirically demonstrates that low regularization on the imputer is necessary to achieve Oracle-level target risk, aligning with the oracle inequality Theorem 5.2 derived in the main paper.
+
+### 4. Synthetic Data (Section 6.1)
+We test our approach using logistic regression with the first-order Sobolev kernel, as explained in Section 6.1 of the paper. 
+* **Run the experiment:** Use `run_experiments_logistic.ipynb`. This notebook calls `pseudo_label_experiment_general.py` (or `pseudo_label_experiment_general_KeOps.py` for the KeOps version).
+* **Results:** Because the full experiment is computationally intensive, we have provided the final results in:
+    * `results_logistic_torchcpu_1_5_cos_0_4_shift.zip` (covariate shift strength $B=n^{0.4}$) 
+    * `results_logistic_torchcpu_1_5_cos_0_45_shift.zip` (covariate shift strength $B=n^{0.45}$) 
+* **Plotting:** The results can be plotted using `plot_curves_synthetic.ipynb`, which outputs `logistic_errors_04.pdf` and `logistic_errors_045.pdf`.
 
 ## 🧮 Algorithmic Details
 We implemented a generic solver for kernel GLMs in Python, using the Fisher scoring method. For full mathematical details and notes on our scalable GPU implementation with KeOps, please see our [Algorithmic Details document](ALGORITHM.md).
@@ -89,14 +90,4 @@ This repository provides a general solver for kernel ridge regression, kernel lo
 
 * `rkhs_glm_scaled.py`: Provides the basic solver for ridge-regularized kernel GLMs. For relatively small sample sizes ($n \le 5000$), a simple version using only Numpy and Scipy is enough. 
 * `rkhs_glm_scaled_KeOps.py`: For larger problems, we implement the IRLS inner linear solves using kernel matvec oracles computed on-the-fly on the GPU, using the KeOps library. 
-
-## 📊 Experiments
-
-### Synthetic Data (Section 6.1)
-We test our approach using logistic regression with the first-order Sobolev kernel. 
-* **Run the experiment:** Use `run_experiments_logistic.ipynb`. This notebook calls `pseudo_label_experiment_general.py` (or `pseudo_label_experiment_general_KeOps.py` for the KeOps version).
-* **Results:** Because the full experiment is computationally intensive, we have provided the final results in:
-    * `results_logistic_torchcpu_1_5_cos_0_4_shift.zip` (covariate shift strength $B=n^{0.4}$) 
-    * `results_logistic_torchcpu_1_5_cos_0_45_shift.zip` (covariate shift strength $B=n^{0.45}$) 
-* **Plotting:** The results can be plotted using `plot_curves_synthetic.ipynb`, which outputs `logistic_errors_04.pdf` and `logistic_errors_045.pdf`.
 
