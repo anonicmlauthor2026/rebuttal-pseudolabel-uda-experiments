@@ -70,10 +70,10 @@ For full reproducible details—including the exact grid of hyperparameters and 
 **Objective:** To empirically validate our theoretical insight that the imputation model penalty ($\tilde{\lambda}$) must be small to guarantee valid model selection.
 
 **Description:**
-Our theoretical analysis dictates that the imputation model must be **undersmoothed** to ensure valid model selection with pseudo-labels. While our theoretical guarantees (Theorem B.2) hold for finite samples, isolating the leading-order effects that govern the optimal penalty scaling requires a sufficiently large sample size. We evaluate our method using $n$ = 16,000 to empirically validate this regime without interference from finite-sample noise. To ensure statistical significance, we sweep across a grid of penalty values and measure the empirical target excess risk of the final estimator over 50 independent Monte Carlo trials. We use the same setup as the previous toy example, i.e. same feature space, response model, and kernel.
+Our theoretical analysis dictates that the imputation model must be **undersmoothed** to ensure valid model selection with pseudo-labels. While our theoretical guarantees (Theorem B.1) hold for finite samples, isolating the leading-order effects that govern the optimal penalty scaling requires a sufficiently large sample size. We evaluate our method using $n$ = 16,000 to empirically validate this regime without interference from finite-sample noise. To ensure statistical significance, we sweep across a grid of penalty values and measure the empirical target excess risk of the final estimator over 50 independent Monte Carlo trials. We use the same setup as the previous toy example, i.e. same feature space, response model, and kernel.
 
 **Results:**
-The output empirically demonstrates that low regularization on the imputer is necessary to achieve Oracle-level target risk, perfectly aligning with the oracle inequality derived in Theorem B.2 of the main paper.
+The output empirically demonstrates that low regularization on the imputer is necessary to achieve Oracle-level target risk, perfectly aligning with the oracle inequality derived in Theorem B.1 of the paper.
 
 ![Ablation Study Results](ablation_plot.png)
 
