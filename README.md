@@ -4,7 +4,7 @@
 
 This anonymous repository contains the code and reproducible scripts for the paper's experiments.
 
-## 1. Baselines Comparisons (`benchmark_raisin_full.ipynb`)
+## Baselines Comparisons (`benchmark_raisin_full.ipynb`, Section 5.2)
 **Objective:** Compare our GLM Pseudo-Labeling framework against established density-ratio (Importance Weighting) and KRR pseudo-labeling baselines.
 * **Methods Included:**
   * Unsupervised GLM Pseudo-Labeling (Ours)
@@ -25,7 +25,7 @@ This anonymous repository contains the code and reproducible scripts for the pap
 | | Oracle (True Target Labels) | 0.437 | 0.008 |
 | **Baseline** | Naive (Source-Only) | 0.442 | 0.014 |
 
-## 2. Toy Example (`demo_covariate_shift.ipynb`)
+## Toy Example (`demo_covariate_shift.ipynb`)
 **Objective:** Demonstrate the necessity of target-specific adaptation, achieved through target-aware Ridge regularization's parameter selection for well-specified models.
 * **Description:** This simulation generates a well-specified synthetic environment undergoing covariate shift. It compares the risk landscape of models tuned exclusively on the source distribution (Naive) versus models tuned via our target-optimal penalty selection.
 * **Results:** The simulation showcases that the presence of covariate shift alters the optimal regularization path. Relying on source-optimal penalties leads to severe target risk degradation, highlighting why unsupervised target adaptation is required.
@@ -65,7 +65,7 @@ For full reproducible details—including the exact grid of hyperparameters and 
 | **Oracle** | 0.002855 | [0.001312, 0.004399] |
 
 
-## 3. Ablation Study (`ablation_logistic.ipynb`): Validating the Undersmoothed Imputation Penalty
+## Ablation Study (`ablation_logistic.ipynb`): Validating the Undersmoothed Imputation Penalty
 
 **Objective:** To empirically validate our theoretical insight that the imputation model penalty ($\tilde{\lambda}$) must be small to guarantee valid model selection.
 
@@ -90,7 +90,7 @@ The output empirically demonstrates that low regularization on the imputer is ne
 * **Massive Performance Gap:** Using the optimal undersmoothed penalty yields a **>10x reduction in excess risk** compared to a standard baseline penalty (0.011 vs. 0.114).
 * **Statistical Significance:** The improvement of the undersmoothed estimator over the baseline is highly statistically significant across all random seeds ($p < 10^{-34}$, paired t-test).
 
-## 4. Synthetic Data (Section 5.1)
+## Synthetic Data (Section 5.1)
 We test our approach using logistic regression with the first-order Sobolev kernel, as explained in Section 5.1 of the paper. 
 * **Run the experiment:** Use `run_experiments_logistic.ipynb`. This notebook calls `pseudo_label_experiment_general.py` (or `pseudo_label_experiment_general_KeOps.py` for the KeOps version).
 * **Results:** Because the full experiment is computationally intensive, we have provided the final results in:
@@ -106,6 +106,8 @@ This repository provides a general solver for kernel ridge regression, kernel lo
 
 * `rkhs_glm_scaled.py`: Provides the basic solver for ridge-regularized kernel GLMs. For relatively small sample sizes ($n \le 5000$), a simple version using only Numpy and Scipy is enough. 
 * `rkhs_glm_scaled_KeOps.py`: For larger problems, we implement the IRLS inner linear solves using kernel matvec oracles computed on-the-fly on the GPU, using the KeOps library.
+
+**Compute resources:**. All reported experiments were run on Google Colab Pro. Most runs are CPU-reproducible and do not require specialized hardware; Colab Pro was used primarily for convenience. The main experimental runs used High RAM Colab CPU runtimes with approximately 30 GB RAM. GPU acceleration was used only for the PyKeOps-based kernel computation module, where it reduces runtime but is not essential to the proposed model-selection procedure.
 
 ## References & Acknowledgements
 
